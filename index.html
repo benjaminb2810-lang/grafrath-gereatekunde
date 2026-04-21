@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1a1a">
+    
+    <title>Feuerwehr Grafrath Gerätekunde</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    
+    <style>
+        /* ===== CSS Reset & Basis ===== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-glass: rgba(255, 255, 255, 0.05);
+            --bg-glass-hover: rgba(255, 255, 255, 0.1);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --accent: #ff3b30;
+            --accent-glow: rgba(255, 59, 48, 0.3);
+            --success: #30d158;
+            --blur-amount: 20px;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* ===== Glasmorphism Komponenten ===== */
+        .glass {
+            background: var(--bg-glass);
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+        }
+
+        .glass-card {
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.1) 0%,
+                rgba(255, 255, 255, 0.05) 100%
+            );
+            backdrop-filter: blur(var(--blur-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ===== App Container ===== */
+        .app {
+            max-width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        /* ===== Header ===== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 16px 20px;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), #ff6b5b);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .back-btn {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--bg-glass-hover);
+        }
+
+        .back-btn.visible {
+            display: flex;
+        }
+
+        /* ===== Screens ===== */
+        .screen {
+            display: none;
+            padding: 24px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== Startseite ===== */
+        .hero {
+            text-align: center;
+            padding: 40px 0 60px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 6vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* ===== Fahrzeug-Auswahl ===== */
+        .vehicle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .vehicle-card {
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .vehicle-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+        }
+
+        .vehicle-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        }
+
+        .vehicle-info {
+            padding: 24px;
+        }
+
+        .vehicle-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .vehicle-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .vehicle-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+            padding: 8px 14px;
+            background: var(--accent-glow);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* ===== Ansichten-Navigation ===== */
+        .view-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .view-btn {
+            flex-shrink: 0;
+            padding: 14px 28px;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 14px;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .view-btn:hover {
+            background: var(--bg-glass-hover);
+            color: var(--text-primary);
+        }
+
+        .view-btn.active {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border-color: var(--text-primary);
+        }
+
+        /* ===== Fahrzeug-Ansicht ===== */
+        .vehicle-view {
+            position: relative;
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            overflow: hidden;
+            aspect-ratio: 16/10;
+            max-height: 500px;
+        }
+
+        .vehicle-view-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            display: block;
+        }
+
+        .vehicle-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            color: var(--text-muted);
+        }
+
+        /* ===== Gerätefach-Hotspots ===== */
+        .compartment-hotspot {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 59, 48, 0.2);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .compartment-hotspot::before {
+            content: '+';
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-primary);
+        }
+
+        .compartment-hotspot:hover {
+            transform: scale(1.15);
+            background: rgba(255, 59, 48, 0.4);
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 15px rgba(255, 59, 48, 0);
+            }
+        }
+
+        .compartment-label {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 4px 10px;
+            border-radius: 6px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+
+        .compartment-hotspot:hover .compartment-label {
+            opacity: 1;
+        }
+
+        /* ===== Gerätefach-Detail (Modal) ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: modalSlide 0.4s ease;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--bg-glass-hover);
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* ===== Gerätefach-Bild mit Markierungen ===== */
+        .compartment-detail {
+            position: relative;
+            background: #1a1a1a;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .compartment-image {
+            width: 100%;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+            display: block;
+        }
+
+        .compartment-placeholder {
+            width: 100%;
+            aspect-ratio: 4/3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            font-size: 4rem;
+        }
+
+        /* ===== Beschriftungen mit Pfeilen ===== */
+        .equipment-marker {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .marker-dot {
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            flex-shrink: 0;
+        }
+
+        .marker-line {
+            width: 40px;
+            height: 2px;
+            background: white;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        }
+
+        .marker-label {
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        /* Marker-Richtungen */
+        .marker-right {
+            flex-direction: row;
+        }
+
+        .marker-left {
+            flex-direction: row-reverse;
+        }
+
+        /* ===== Geräte-Liste ===== */
+        .equipment-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .equipment-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .equipment-item:hover {
+            background: var(--bg-glass-hover);
+        }
+
+        .equipment-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--accent-glow);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .equipment-info h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .equipment-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .equipment-count {
+            margin-left: auto;
+            padding: 6px 12px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 600px) {
+            .header {
+                padding: 12px 16px;
+            }
+
+            .logo {
+                font-size: 1.1rem;
+            }
+
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1.25rem;
+            }
+
+            .screen {
+                padding: 16px;
+            }
+
+            .hero {
+                padding: 24px 0 40px;
+            }
+
+            .vehicle-grid {
+                gap: 16px;
+            }
+
+            .view-selector {
+                gap: 8px;
+            }
+
+            .view-btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+
+            .compartment-hotspot {
+                width: 44px;
+                height: 44px;
+            }
+
+            .modal {
+                border-radius: 20px;
+            }
+
+            .modal-header {
+                padding: 16px;
+            }
+
+            .modal-body {
+                padding: 16px;
+            }
+        }
+
+        /* ===== PWA Install Banner ===== */
+        .install-banner {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            padding: 16px 20px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            z-index: 900;
+            animation: slideUp 0.4s ease;
+        }
+
+        .install-banner.visible {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .install-text {
+            font-size: 0.95rem;
+        }
+
+        .install-text strong {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .install-text span {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .install-btn {
+            padding: 12px 24px;
+            background: var(--accent);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .install-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .install-dismiss {
+            padding: 8px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🚒</div>
+                    <span>Feuerwehr Grafrath Gerätekunde</span>
+                </div>
+                <button class="back-btn" id="backBtn" onclick="goBack()">
+                    ← Zurück
+                </button>
+            </div>
+        </header>
+
+        <!-- Startseite: Fahrzeugauswahl -->
+        <main class="screen active" id="homeScreen">
+            <div class="hero">
+                <h1>Fahrzeug wählen</h1>
+                <p>Wähle ein Fahrzeug, um die Gerätefächer zu erkunden</p>
+            </div>
+
+            <div class="vehicle-grid">
+                <div class="vehicle-card glass-card" onclick="selectVehicle('hlf')">
+                    <div class="vehicle-image">🚒</div>
+                    <div class="vehicle-info">
+                        <h2 class="vehicle-name">HLF 20</h2>
+                        <p class="vehicle-desc">Hilfeleistungslöschgruppenfahrzeug mit umfangreicher technischer Ausstattung</p>
+                        <div class="vehicle-badge">
+                            <span>●</span> 7 Gerätefächer
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vehicle-card glass-card" onclick="selectVehicle('tlf')">
+                    <div class="vehicle-image">🚒</div>
+                    <div class="vehicle-info">
+                        <h2 class="vehicle-name">LF 10</h2>
+                        <p class="vehicle-desc">Löschgruppenfahrzeug mit 2500L Wassertank für Großbrände</p>
+                        <div class="vehicle-badge">
+                            <span>●</span> 5 Gerätefächer
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Fahrzeug-Ansicht -->
+        <main class="screen" id="vehicleScreen">
+            <h1 id="vehicleTitle" style="font-size: 1.8rem; margin-bottom: 24px;">HLF 20</h1>
+
+            <div class="view-selector">
+                <button class="view-btn active" onclick="selectView('left')">
+                    ◀ Linke Seite
+                </button>
+                <button class="view-btn" onclick="selectView('back')">
+                    ▼ Heck
+                </button>
+                <button class="view-btn" onclick="selectView('right')">
+                    Rechte Seite ▶
+                </button>
+            </div>
+
+            <div class="vehicle-view" id="vehicleView">
+                <img id="vehicleViewImage" class="vehicle-view-image" src="assets/links.png" alt="Linke Seite">
+
+                <!-- Hotspots für linke Seite – Positionen gemäß gelber Markierungen -->
+                <div class="compartment-hotspot" style="top: 55%; left: 54%;" onclick="openCompartment('g1')">
+                    <span class="compartment-label">Gerätefach 1</span>
+                </div>
+                <div class="compartment-hotspot" style="top: 52%; left: 67%;" onclick="openCompartment('g2')">
+                    <span class="compartment-label">Gerätefach 2</span>
+                </div>
+                <div class="compartment-hotspot" style="top: 52%; left: 84%;" onclick="openCompartment('g3')">
+                    <span class="compartment-label">Gerätefach 3</span>
+                </div>
+            </div>
+
+            <p style="color: var(--text-muted); margin-top: 16px; text-align: center; font-size: 0.9rem;">
+                Tippe auf die markierten Bereiche, um die Geräte zu sehen
+            </p>
+        </main>
+
+        <!-- Gerätefach-Modal -->
+        <div class="modal-overlay" id="compartmentModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="modalTitle">Gerätefach 1</h2>
+                    <button class="modal-close" onclick="closeModal()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="compartment-detail">
+                        <div class="compartment-placeholder">📦</div>
+                        
+                        <!-- Beispiel-Markierungen -->
+                        <div class="equipment-marker marker-right" style="top: 20%; left: 10%;">
+                            <div class="marker-dot"></div>
+                            <div class="marker-line"></div>
+                            <div class="marker-label">Schlauchpaket C</div>
+                        </div>
+                        <div class="equipment-marker marker-right" style="top: 45%; left: 10%;">
+                            <div class="marker-dot"></div>
+                            <div class="marker-line"></div>
+                            <div class="marker-label">Strahlrohre</div>
+                        </div>
+                        <div class="equipment-marker marker-left" style="top: 30%; right: 10%;">
+                            <div class="marker-dot"></div>
+                            <div class="marker-line"></div>
+                            <div class="marker-label">Verteiler</div>
+                        </div>
+                        <div class="equipment-marker marker-left" style="top: 65%; right: 10%;">
+                            <div class="marker-dot"></div>
+                            <div class="marker-line"></div>
+                            <div class="marker-label">Standrohr</div>
+                        </div>
+                    </div>
+
+                    <h3 style="font-size: 1.1rem; margin-bottom: 16px; color: var(--text-secondary);">
+                        Inhalt dieses Fachs
+                    </h3>
+                    
+                    <div class="equipment-list" id="equipmentList">
+                        <div class="equipment-item">
+                            <div class="equipment-icon">🔧</div>
+                            <div class="equipment-info">
+                                <h4>Schlauchpaket C 15m</h4>
+                                <p>Doppelt gerollter C-Schlauch</p>
+                            </div>
+                            <div class="equipment-count">3×</div>
+                        </div>
+                        <div class="equipment-item">
+                            <div class="equipment-icon">💧</div>
+                            <div class="equipment-info">
+                                <h4>Strahlrohr CM</h4>
+                                <p>Mehrzweckstrahlrohr mit Absperrung</p>
+                            </div>
+                            <div class="equipment-count">2×</div>
+                        </div>
+                        <div class="equipment-item">
+                            <div class="equipment-icon">🔀</div>
+                            <div class="equipment-info">
+                                <h4>Verteiler B-CBC</h4>
+                                <p>Dreiwegeventil mit Niederschraubventilen</p>
+                            </div>
+                            <div class="equipment-count">1×</div>
+                        </div>
+                        <div class="equipment-item">
+                            <div class="equipment-icon">🚰</div>
+                            <div class="equipment-info">
+                                <h4>Standrohr 2B</h4>
+                                <p>Zum Anschluss an Unterflurhydranten</p>
+                            </div>
+                            <div class="equipment-count">1×</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PWA Install Banner -->
+        <div class="install-banner" id="installBanner">
+            <div class="install-text">
+                <strong>App installieren</strong>
+                <span>Für schnelleren Zugriff zum Homescreen hinzufügen</span>
+            </div>
+            <button class="install-btn" id="installBtn">Installieren</button>
+            <button class="install-dismiss" onclick="dismissInstall()">×</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== App State =====
+        let currentScreen = 'home';
+        let currentVehicle = null;
+        let currentView = 'left';
+        let deferredPrompt = null;
+
+        // ===== Navigation =====
+        function selectVehicle(vehicleId) {
+            currentVehicle = vehicleId;
+            currentScreen = 'vehicle';
+            
+            document.getElementById('homeScreen').classList.remove('active');
+            document.getElementById('vehicleScreen').classList.add('active');
+            document.getElementById('backBtn').classList.add('visible');
+            
+            // Titel anpassen
+            const titles = {
+                'hlf': 'HLF 20',
+                'tlf': 'TLF 16/25'
+            };
+            document.getElementById('vehicleTitle').textContent = titles[vehicleId] || 'Fahrzeug';
+            
+            updateVehicleView();
+        }
+
+        function goBack() {
+            if (currentScreen === 'vehicle') {
+                currentScreen = 'home';
+                currentVehicle = null;
+                
+                document.getElementById('vehicleScreen').classList.remove('active');
+                document.getElementById('homeScreen').classList.add('active');
+                document.getElementById('backBtn').classList.remove('visible');
+            }
+        }
+
+        function selectView(view) {
+            currentView = view;
+            
+            // Update buttons
+            document.querySelectorAll('.view-btn').forEach((btn, index) => {
+                const views = ['left', 'back', 'right'];
+                btn.classList.toggle('active', views[index] === view);
+            });
+            
+            updateVehicleView();
+        }
+
+        function updateVehicleView() {
+            const viewImages = {
+                left: { src: 'assets/links.png', alt: 'Linke Seite' },
+                back: { src: 'assets/hinten.png', alt: 'Heck' },
+                right: { src: 'assets/rechts.png', alt: 'Rechte Seite' }
+            };
+            const img = document.getElementById('vehicleViewImage');
+            const view = viewImages[currentView] || viewImages.left;
+            if (img) {
+                img.src = view.src;
+                img.alt = view.alt;
+            }
+            console.log(`Zeige ${currentVehicle}, Ansicht: ${currentView}`);
+        }
+
+        // ===== Gerätefach Modal =====
+        function openCompartment(compartmentId) {
+            document.getElementById('compartmentModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Hier würdest du die Daten für das spezifische Fach laden
+            document.getElementById('modalTitle').textContent = `Gerätefach ${compartmentId.replace('g', '')}`;
+        }
+
+        function closeModal() {
+            document.getElementById('compartmentModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Schließen bei Klick außerhalb
+        document.getElementById('compartmentModal').addEventListener('click', (e) => {
+            if (e.target.id === 'compartmentModal') {
+                closeModal();
+            }
+        });
+
+        // Schließen mit Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // ===== PWA Installation =====
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Banner nach 3 Sekunden zeigen
+            setTimeout(() => {
+                document.getElementById('installBanner').classList.add('visible');
+            }, 3000);
+        });
+
+        document.getElementById('installBtn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`Installation: ${outcome}`);
+                deferredPrompt = null;
+                dismissInstall();
+            }
+        });
+
+        function dismissInstall() {
+            document.getElementById('installBanner').classList.remove('visible');
+        }
+
+        // ===== Service Worker =====
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('SW registriert'))
+                    .catch(err => console.log('SW Fehler:', err));
+            });
+        }
+    </script>
+</body>
+</html>

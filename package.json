@@ -1,0 +1,28 @@
+{
+  "name": "primary",
+  "version": "1.0.0",
+  "description": "v",
+  "main": "index.js",
+  "scripts": {
+    "build:analytics": "esbuild analytics.js --bundle --outfile=analytics.bundle.js --format=esm",
+    "build": "npm run build:analytics",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benjaminb2810-lang/grafrath-gereatekunde.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benjaminb2810-lang/grafrath-gereatekunde/issues"
+  },
+  "homepage": "https://github.com/benjaminb2810-lang/grafrath-gereatekunde#readme",
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
+  }
+}

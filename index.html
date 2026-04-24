@@ -831,29 +831,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="compartment-detail">
-                        <div class="compartment-placeholder">📦</div>
-                        
-                        <!-- Beispiel-Markierungen -->
-                        <div class="equipment-marker marker-right" style="top: 20%; left: 10%;">
-                            <div class="marker-dot"></div>
-                            <div class="marker-line"></div>
-                            <div class="marker-label">Schlauchpaket C</div>
-                        </div>
-                        <div class="equipment-marker marker-right" style="top: 45%; left: 10%;">
-                            <div class="marker-dot"></div>
-                            <div class="marker-line"></div>
-                            <div class="marker-label">Strahlrohre</div>
-                        </div>
-                        <div class="equipment-marker marker-left" style="top: 30%; right: 10%;">
-                            <div class="marker-dot"></div>
-                            <div class="marker-line"></div>
-                            <div class="marker-label">Verteiler</div>
-                        </div>
-                        <div class="equipment-marker marker-left" style="top: 65%; right: 10%;">
-                            <div class="marker-dot"></div>
-                            <div class="marker-line"></div>
-                            <div class="marker-label">Standrohr</div>
-                        </div>
+                        <img id="compartmentImage" src="" alt="Gerätefach"
+                             style="width:100%; border-radius:12px; display:block; object-fit:contain;">
                     </div>
 
                     <h3 style="font-size: 1.1rem; margin-bottom: 16px; color: var(--text-secondary);">
@@ -980,11 +959,21 @@
 
         // ===== Gerätefach Modal =====
         function openCompartment(compartmentId) {
+            const data = {
+                'g1': { titel: 'Gerätefach 2 – Linke Seite',  bild: 'assets/links_geraetefeach1.png' },
+                'g2': { titel: 'Gerätefach 4 – Linke Seite',  bild: 'assets/links_geraetefeach2.png' },
+                'g3': { titel: 'Gerätefach 6 – Linke Seite',  bild: 'assets/links_geraetefeach3.png' },
+                'h1': { titel: 'Gerätefach 7 – Heck',         bild: 'assets/heck_geraetefeach1.png'  },
+                'r1': { titel: 'Gerätefach 5 – Rechte Seite', bild: 'assets/rechts_geraetefeach1.png'},
+                'r2': { titel: 'Gerätefach 3 – Rechte Seite', bild: 'assets/rechts_geraetefeach2.png'},
+                'r3': { titel: 'Gerätefach 1 – Rechte Seite', bild: 'assets/rechts_geraetefeach3.png'},
+            };
+            const fach = data[compartmentId];
+            if (!fach) return;
+            document.getElementById('modalTitle').textContent = fach.titel;
+            document.getElementById('compartmentImage').src = fach.bild;
             document.getElementById('compartmentModal').classList.add('active');
             document.body.style.overflow = 'hidden';
-            
-            // Hier würdest du die Daten für das spezifische Fach laden
-            document.getElementById('modalTitle').textContent = `Gerätefach ${compartmentId.replace('g', '')}`;
         }
 
         function closeModal() {

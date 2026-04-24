@@ -1,0 +1,21 @@
+{
+  "name": "feuerwehr-grafrath-geraetekunde",
+  "version": "1.0.0",
+  "description": "Feuerwehr Grafrath Gerätekunde - Interactive equipment knowledge training",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Static HTML project - no build required'",
+    "lint": "echo 'No linter configured'"
+  },
+  "keywords": [
+    "feuerwehr",
+    "training",
+    "equipment"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@vercel/speed-insights": "^1.0.12"
+  }
+}

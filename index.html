@@ -783,15 +783,37 @@
             <div class="vehicle-view" id="vehicleView">
                 <img id="vehicleViewImage" class="vehicle-view-image" src="assets/links.png" alt="Linke Seite">
 
-                <!-- Hotspots für linke Seite – Positionen gemäß gelber Markierungen -->
-                <div class="compartment-hotspot" style="top: 52%; left: 46%;" onclick="openCompartment('g1')">
-                    <span class="compartment-label">Gerätefach 1</span>
+                <!-- Hotspots: Linke Seite -->
+                <div class="hotspot-group" id="hotspots-left">
+                    <div class="compartment-hotspot" style="top: 55%; left: 54%;" onclick="openCompartment('g1')">
+                        <span class="compartment-label">Gerätefach 1</span>
+                    </div>
+                    <div class="compartment-hotspot" style="top: 52%; left: 67%;" onclick="openCompartment('g2')">
+                        <span class="compartment-label">Gerätefach 2</span>
+                    </div>
+                    <div class="compartment-hotspot" style="top: 52%; left: 84%;" onclick="openCompartment('g3')">
+                        <span class="compartment-label">Gerätefach 3</span>
+                    </div>
                 </div>
-                <div class="compartment-hotspot" style="top: 45%; left: 67%;" onclick="openCompartment('g2')">
-                    <span class="compartment-label">Gerätefach 2</span>
+
+                <!-- Hotspots: Heck -->
+                <div class="hotspot-group" id="hotspots-back" style="display:none;">
+                    <div class="compartment-hotspot" style="top: 47%; left: 50%;" onclick="openCompartment('h1')">
+                        <span class="compartment-label">Gerätefach H1</span>
+                    </div>
                 </div>
-                <div class="compartment-hotspot" style="top: 52%; left: 80%;" onclick="openCompartment('g3')">
-                    <span class="compartment-label">Gerätefach 3</span>
+
+                <!-- Hotspots: Rechte Seite -->
+                <div class="hotspot-group" id="hotspots-right" style="display:none;">
+                    <div class="compartment-hotspot" style="top: 52%; left: 13%;" onclick="openCompartment('r1')">
+                        <span class="compartment-label">Gerätefach 1</span>
+                    </div>
+                    <div class="compartment-hotspot" style="top: 45%; left: 30%;" onclick="openCompartment('r2')">
+                        <span class="compartment-label">Gerätefach 2</span>
+                    </div>
+                    <div class="compartment-hotspot" style="top: 48%; left: 55%;" onclick="openCompartment('r3')">
+                        <span class="compartment-label">Gerätefach 3</span>
+                    </div>
                 </div>
             </div>
 
@@ -932,6 +954,11 @@
                 const views = ['left', 'back', 'right'];
                 btn.classList.toggle('active', views[index] === view);
             });
+
+            // Hotspot-Gruppen ein-/ausblenden
+            document.getElementById('hotspots-left').style.display  = view === 'left'  ? 'block' : 'none';
+            document.getElementById('hotspots-back').style.display  = view === 'back'  ? 'block' : 'none';
+            document.getElementById('hotspots-right').style.display = view === 'right' ? 'block' : 'none';
             
             updateVehicleView();
         }

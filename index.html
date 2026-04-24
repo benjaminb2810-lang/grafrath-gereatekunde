@@ -641,6 +641,85 @@
             }
         }
 
+        /* ===== Quiz ===== */
+        .quiz-card { cursor: pointer; overflow: hidden; margin-top: 24px; }
+        .quiz-image {
+            width: 100%; height: 200px;
+            background: linear-gradient(135deg, #1a2a1a, #0a1a0a);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 4rem; position: relative;
+        }
+        .quiz-image::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+            height: 60%; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        }
+        .quiz-badge {
+            display: inline-flex; align-items: center; gap: 6px; margin-top: 16px;
+            padding: 8px 14px; background: rgba(48,209,88,0.15); border-radius: 20px;
+            font-size: 0.85rem; color: var(--success); font-weight: 500;
+        }
+        .quiz-progress-wrap { flex: 1; margin: 0 16px; }
+        .quiz-progress-bar { width: 100%; height: 6px; background: var(--bg-glass); border-radius: 3px; overflow: hidden; }
+        .quiz-progress-fill { height: 100%; background: var(--success); border-radius: 3px; transition: width 0.4s ease; }
+        .quiz-counter { font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-top: 6px; }
+        .quiz-question-card {
+            background: var(--bg-glass); border: 1px solid var(--border-glass);
+            border-radius: 20px; padding: 28px; margin-bottom: 24px;
+        }
+        .quiz-question-tag {
+            font-size: 0.8rem; font-weight: 600; color: var(--success);
+            text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;
+        }
+        .quiz-question-text { font-size: 1.15rem; font-weight: 600; line-height: 1.5; margin-bottom: 8px; }
+        .quiz-hint { font-size: 0.85rem; color: var(--text-muted); }
+        .quiz-answers { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+        .quiz-answer-btn {
+            width: 100%; padding: 16px 20px; background: var(--bg-glass);
+            border: 1.5px solid var(--border-glass); border-radius: 14px;
+            color: var(--text-primary); font-size: 1rem; font-weight: 500;
+            text-align: left; cursor: pointer; transition: all 0.2s ease;
+            display: flex; align-items: center; gap: 14px;
+        }
+        .quiz-answer-btn:hover:not(:disabled) { background: var(--bg-glass-hover); border-color: rgba(255,255,255,0.25); transform: translateX(4px); }
+        .quiz-answer-btn .answer-letter {
+            width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.08);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.85rem; font-weight: 700; flex-shrink: 0; transition: all 0.2s ease;
+        }
+        .quiz-answer-btn.selected { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.1); }
+        .quiz-answer-btn.selected .answer-letter { background: rgba(255,255,255,0.2); }
+        .quiz-answer-btn.correct { border-color: var(--success); background: rgba(48,209,88,0.12); }
+        .quiz-answer-btn.correct .answer-letter { background: var(--success); color: #000; }
+        .quiz-answer-btn.wrong { border-color: var(--accent); background: rgba(255,59,48,0.12); }
+        .quiz-answer-btn.wrong .answer-letter { background: var(--accent); color: #fff; }
+        .quiz-answer-btn:disabled { cursor: default; }
+        .quiz-feedback {
+            display: none; padding: 14px 18px; border-radius: 12px;
+            font-size: 0.95rem; font-weight: 500; margin-bottom: 20px; line-height: 1.5;
+        }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.ok  { background: rgba(48,209,88,0.15); color: var(--success); border: 1px solid rgba(48,209,88,0.3); }
+        .quiz-feedback.bad { background: rgba(255,59,48,0.15); color: var(--accent);  border: 1px solid rgba(255,59,48,0.3); }
+        .quiz-next-btn {
+            width: 100%; padding: 16px; background: var(--text-primary); color: var(--bg-primary);
+            border: none; border-radius: 14px; font-size: 1rem; font-weight: 700;
+            cursor: pointer; transition: all 0.2s ease; display: none;
+        }
+        .quiz-next-btn.show { display: block; }
+        .quiz-next-btn:hover { filter: brightness(0.9); }
+        .quiz-result { text-align: center; padding: 40px 20px; }
+        .quiz-result-emoji { font-size: 5rem; margin-bottom: 20px; }
+        .quiz-result-score { font-size: 3rem; font-weight: 700; margin-bottom: 8px; }
+        .quiz-result-label { color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 32px; }
+        .quiz-result-bar-wrap { background: var(--bg-glass); border-radius: 12px; height: 12px; overflow: hidden; margin-bottom: 32px; }
+        .quiz-result-bar { height: 100%; border-radius: 12px; background: linear-gradient(90deg, var(--success), #00ff88); transition: width 1s ease; }
+        .quiz-restart-btn {
+            padding: 16px 40px; background: var(--success); color: #000;
+            border: none; border-radius: 14px; font-size: 1rem; font-weight: 700;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .quiz-restart-btn:hover { filter: brightness(1.1); }
+
         /* ===== PWA Install Banner ===== */
         .install-banner {
             display: none;
@@ -761,10 +840,63 @@
                         </div>
                     </div>
                 </div>
+                <div class="vehicle-card glass-card quiz-card" onclick="startQuiz()">
+                    <div class="vehicle-image quiz-image">🎯</div>
+                    <div class="vehicle-info">
+                        <h2 class="vehicle-name">Gerätefach-Quiz</h2>
+                        <p class="vehicle-desc">Teste dein Wissen über die Ausrüstung des HLF 20 – 10 zufällige Fragen</p>
+                        <div class="quiz-badge">
+                            <span>●</span> 10 Fragen · Multiple Choice
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
 
-        <!-- Fahrzeug-Ansicht -->
+        <!-- Quiz Screen -->
+        <main class="screen" id="quizScreen">
+            <div style="display:flex; align-items:center; gap:16px; margin-bottom:28px;">
+                <h1 style="font-size:1.8rem;">Gerätefach-Quiz</h1>
+            </div>
+
+            <!-- Fortschrittsanzeige -->
+            <div style="display:flex; align-items:center; margin-bottom:28px;">
+                <span style="font-size:0.9rem; color:var(--text-muted); white-space:nowrap;" id="quizCounterLabel">Frage 1 / 10</span>
+                <div class="quiz-progress-wrap">
+                    <div class="quiz-progress-bar">
+                        <div class="quiz-progress-fill" id="quizProgressFill" style="width:0%"></div>
+                    </div>
+                </div>
+                <span style="font-size:0.9rem; color:var(--success); white-space:nowrap;" id="quizScoreLabel">✓ 0 richtig</span>
+            </div>
+
+            <!-- Frage -->
+            <div class="quiz-question-card" id="quizQuestionCard">
+                <div class="quiz-question-tag">❓ Frage</div>
+                <div class="quiz-question-text" id="quizQuestionText">Lade...</div>
+                <div class="quiz-hint" id="quizHint"></div>
+            </div>
+
+            <!-- Antworten -->
+            <div class="quiz-answers" id="quizAnswers"></div>
+
+            <!-- Feedback -->
+            <div class="quiz-feedback" id="quizFeedback"></div>
+
+            <!-- Weiter-Button -->
+            <button class="quiz-next-btn" id="quizNextBtn" onclick="nextQuestion()">Nächste Frage →</button>
+
+            <!-- Ergebnis -->
+            <div class="quiz-result" id="quizResult" style="display:none;">
+                <div class="quiz-result-emoji" id="resultEmoji">🏆</div>
+                <div class="quiz-result-score" id="resultScore">0 / 10</div>
+                <div class="quiz-result-label" id="resultLabel">Super gemacht!</div>
+                <div class="quiz-result-bar-wrap">
+                    <div class="quiz-result-bar" id="resultBar" style="width:0%"></div>
+                </div>
+                <button class="quiz-restart-btn" onclick="startQuiz()">🔄 Nochmal spielen</button>
+            </div>
+        </main>
         <main class="screen" id="vehicleScreen">
             <h1 id="vehicleTitle" style="font-size: 1.8rem; margin-bottom: 24px;">HLF 20</h1>
 
@@ -918,8 +1050,12 @@
             if (currentScreen === 'vehicle') {
                 currentScreen = 'home';
                 currentVehicle = null;
-                
                 document.getElementById('vehicleScreen').classList.remove('active');
+                document.getElementById('homeScreen').classList.add('active');
+                document.getElementById('backBtn').classList.remove('visible');
+            } else if (currentScreen === 'quiz') {
+                currentScreen = 'home';
+                document.getElementById('quizScreen').classList.remove('active');
                 document.getElementById('homeScreen').classList.add('active');
                 document.getElementById('backBtn').classList.remove('visible');
             }
@@ -1020,7 +1156,294 @@
             document.getElementById('installBanner').classList.remove('visible');
         }
 
-        // ===== Service Worker =====
+        // ===== Quiz =====
+        const alleQuizFragen = [
+            {
+                frage: "Was befindet sich in Gerätefach 1 des HLF 20?",
+                hinweis: "Rechte Fahrzeugseite, vorderes Fach",
+                antworten: ["Schnellangriffsschlauch", "Hydraulischer Rettungssatz", "Atemschutzgeräte", "Wärmebildkamera"],
+                richtig: [0, 1]
+            },
+            {
+                frage: "Welche Geräte sind im Gerätefach 2 des HLF 20 verladen?",
+                hinweis: "Rechte Fahrzeugseite, mittleres Fach",
+                antworten: ["Trennschleifer", "C-Schläuche 15m", "Schaumrohr S4", "Verteiler B-CBC"],
+                richtig: [1, 3]
+            },
+            {
+                frage: "Was ist im Gerätefach 3 des HLF 20 zu finden?",
+                hinweis: "Rechte Fahrzeugseite, hinteres Fach",
+                antworten: ["Motorsäge", "Atemschutzmasken", "Unterwasserpumpe", "Stromerzeuger"],
+                richtig: [0, 3]
+            },
+            {
+                frage: "Welche Ausrüstung ist in Gerätefach 4 verladen?",
+                hinweis: "Linke Fahrzeugseite, mittleres Fach",
+                antworten: ["B-Schläuche 20m", "Mehrzweckstrahlrohr", "Kübelspritze", "Druckluftschaumanlage"],
+                richtig: [0, 1]
+            },
+            {
+                frage: "Was befindet sich in Gerätefach 5 des HLF 20?",
+                hinweis: "Rechte Fahrzeugseite",
+                antworten: ["Sanitätskoffer", "Tauchpumpe", "Steckleiter", "Einreißhaken"],
+                richtig: [2, 3]
+            },
+            {
+                frage: "Welche Geräte sind in Gerätefach 6 untergebracht?",
+                hinweis: "Linke Fahrzeugseite, vorderes Fach",
+                antworten: ["Schlauchpaket C", "Overallsets", "Strahlrohr CM", "Standrohr 2B"],
+                richtig: [0, 2]
+            },
+            {
+                frage: "Was ist im Gerätefach 7 (Heck) des HLF 20 verladen?",
+                hinweis: "Heckbereich des Fahrzeugs",
+                antworten: ["Tragkraftspritze TS 8/8", "Schlauchtragekorb", "Wathose", "Rollcontainer mit Löschmittel"],
+                richtig: [0, 1]
+            },
+            {
+                frage: "Welche Schutzausrüstung ist beim HLF 20 mitgeführt?",
+                hinweis: "Persönliche Schutzausrüstung der Mannschaft",
+                antworten: ["Schutzhelm mit Nackenschutz", "Feuerschutzhaube", "Badehose", "Wärmebildkamera"],
+                richtig: [0, 1]
+            },
+            {
+                frage: "Welches Werkzeug zur technischen Hilfeleistung ist beim HLF 20 verladen?",
+                hinweis: "Technische Rettungsgeräte",
+                antworten: ["Spreizer", "Schere (hydraulisch)", "Lötbrenner", "Säbelsäge"],
+                richtig: [0, 1]
+            },
+            {
+                frage: "Welche Schlauchlängen sind beim HLF 20 typischerweise verladen?",
+                hinweis: "Löschmittelversorgung",
+                antworten: ["A-Schlauch 3,2m", "B-Schlauch 20m", "C-Schlauch 15m", "D-Schlauch 30m"],
+                richtig: [0, 2]
+            },
+            {
+                frage: "Was wird beim HLF 20 zur Wasserentnahme aus offenen Gewässern genutzt?",
+                hinweis: "Saugbetrieb",
+                antworten: ["Saugschläuche", "Standrohr", "Strahlrohr", "Verteiler"],
+                richtig: [0]
+            },
+            {
+                frage: "Welche Beleuchtungsgeräte sind beim HLF 20 mitgeführt?",
+                hinweis: "Einsatzbeleuchtung",
+                antworten: ["Handleuchte LED", "Lichtmast ausfahrbar", "Teelichter", "Kerzenlaternen"],
+                richtig: [0, 1]
+            },
+            {
+                frage: "Welche Geräte dienen beim HLF 20 der Wasserversorgung?",
+                hinweis: "Hydrantenbetrieb",
+                antworten: ["Standrohr 2B", "Hydrantenschlüssel", "Schlauchbrücken", "Motorsäge"],
+                richtig: [0, 1]
+            },
+            {
+                frage: "Was ist beim HLF 20 für die Erstversorgung von Verletzten mitgeführt?",
+                hinweis: "Sanitätsausstattung",
+                antworten: ["Notfallrucksack", "Spineboard", "Skalpell", "Beatmungsgerät"],
+                richtig: [0, 1]
+            },
+            {
+                frage: "Welche Geräte zur Brandbekämpfung sind beim HLF 20 verladen?",
+                hinweis: "Direkte Löschmittelabgabe",
+                antworten: ["Mehrzweckstrahlrohr", "Hohlstrahlrohr", "Gartenschlauch", "Sprinkleranlage"],
+                richtig: [0, 1]
+            },
+            {
+                frage: "Was ist beim HLF 20 zur Absicherung der Einsatzstelle mitgeführt?",
+                hinweis: "Verkehrsabsicherung und Warnung",
+                antworten: ["Warnleitkegel", "Faltsignale", "Verkehrsampel", "Straßenmarkierung"],
+                richtig: [0, 1]
+            },
+            {
+                frage: "Welche Atemschutzgeräte sind beim HLF 20 verladen?",
+                hinweis: "Persönlicher Atemschutz",
+                antworten: ["Pressluftatmer PA", "Atemschutzmaske", "Schnorchel", "Taucherbrille"],
+                richtig: [0, 1]
+            },
+            {
+                frage: "Was beinhaltet der Sanitätsrucksack beim HLF 20?",
+                hinweis: "Erstversorgungsmaterial",
+                antworten: ["Verbandsmaterial", "Rettungsdecke", "Bohrmaschine", "Feuerlöscher"],
+                richtig: [0, 1]
+            },
+            {
+                frage: "Welche Leitern sind beim HLF 20 verladen?",
+                hinweis: "Aufstiegsmittel",
+                antworten: ["Steckleiter 4-teilig", "Hakenleiter", "Rolltreppe", "Klettergerüst"],
+                richtig: [0, 1]
+            },
+            {
+                frage: "Was ist beim HLF 20 für den Atemschutzeinsatz zusätzlich mitgeführt?",
+                hinweis: "Überwachung und Reserve",
+                antworten: ["Atemschutzüberwachungstafel", "Reserveflaschen", "Kaffeemaschine", "Ersatzhelme"],
+                richtig: [0, 1]
+            },
+        ];
+
+        let quizFragen = [];
+        let quizIndex = 0;
+        let quizScore = 0;
+        let quizSelected = [];
+        let quizAnswered = false;
+
+        function startQuiz() {
+            // 10 zufällige Fragen auswählen
+            quizFragen = [...alleQuizFragen].sort(() => Math.random() - 0.5).slice(0, 10);
+            quizIndex = 0;
+            quizScore = 0;
+            quizSelected = [];
+            quizAnswered = false;
+
+            // Screens umschalten
+            document.getElementById('homeScreen').classList.remove('active');
+            document.getElementById('vehicleScreen').classList.remove('active');
+            document.getElementById('quizScreen').classList.add('active');
+            document.getElementById('backBtn').classList.add('visible');
+            currentScreen = 'quiz';
+
+            // Ergebnis-Bereich verstecken, Frage-Bereich zeigen
+            document.getElementById('quizResult').style.display = 'none';
+            document.getElementById('quizQuestionCard').style.display = 'block';
+            document.getElementById('quizAnswers').style.display = 'flex';
+
+            zeigeQuizFrage();
+        }
+
+        function zeigeQuizFrage() {
+            const frage = quizFragen[quizIndex];
+            quizSelected = [];
+            quizAnswered = false;
+
+            // Fortschritt
+            const progress = (quizIndex / 10) * 100;
+            document.getElementById('quizProgressFill').style.width = progress + '%';
+            document.getElementById('quizCounterLabel').textContent = `Frage ${quizIndex + 1} / 10`;
+            document.getElementById('quizScoreLabel').textContent = `✓ ${quizScore} richtig`;
+
+            // Frage
+            document.getElementById('quizQuestionText').textContent = frage.frage;
+            document.getElementById('quizHint').textContent = frage.hinweis ? '💡 ' + frage.hinweis : '';
+
+            // Wie viele richtige Antworten?
+            const anzahlRichtig = frage.richtig.length;
+            document.getElementById('quizQuestionCard').querySelector('.quiz-question-tag').textContent =
+                anzahlRichtig === 1 ? '❓ 1 richtige Antwort' : `❓ ${anzahlRichtig} richtige Antworten`;
+
+            // Antwort-Buttons
+            const letters = ['A', 'B', 'C', 'D'];
+            const container = document.getElementById('quizAnswers');
+            container.innerHTML = '';
+            frage.antworten.forEach((text, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-answer-btn';
+                btn.innerHTML = `<span class="answer-letter">${letters[i]}</span><span>${text}</span>`;
+                btn.onclick = () => toggleAnswer(i, frage.richtig.length);
+                container.appendChild(btn);
+            });
+
+            // Feedback + Weiter-Button zurücksetzen
+            const fb = document.getElementById('quizFeedback');
+            fb.className = 'quiz-feedback';
+            fb.textContent = '';
+            document.getElementById('quizNextBtn').className = 'quiz-next-btn';
+        }
+
+        function toggleAnswer(index, maxAuswahl) {
+            if (quizAnswered) return;
+            const buttons = document.querySelectorAll('.quiz-answer-btn');
+            const pos = quizSelected.indexOf(index);
+
+            if (pos === -1) {
+                if (quizSelected.length >= maxAuswahl) return; // nicht mehr auswählen als nötig
+                quizSelected.push(index);
+                buttons[index].classList.add('selected');
+            } else {
+                quizSelected.splice(pos, 1);
+                buttons[index].classList.remove('selected');
+            }
+
+            // Automatisch auswerten wenn genug ausgewählt
+            if (quizSelected.length === maxAuswahl) {
+                werteAus();
+            }
+        }
+
+        function werteAus() {
+            quizAnswered = true;
+            const frage = quizFragen[quizIndex];
+            const buttons = document.querySelectorAll('.quiz-answer-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            const richtigSet = new Set(frage.richtig);
+            const selectedSet = new Set(quizSelected);
+            const istRichtig = frage.richtig.every(r => selectedSet.has(r)) && quizSelected.every(s => richtigSet.has(s));
+
+            // Farben zeigen
+            buttons.forEach((btn, i) => {
+                if (richtigSet.has(i)) btn.classList.add('correct');
+                else if (selectedSet.has(i)) btn.classList.add('wrong');
+            });
+
+            // Feedback
+            const fb = document.getElementById('quizFeedback');
+            if (istRichtig) {
+                quizScore++;
+                fb.className = 'quiz-feedback show ok';
+                fb.textContent = '✅ Richtig! Sehr gut!';
+            } else {
+                fb.className = 'quiz-feedback show bad';
+                const richtigeTexte = frage.richtig.map(r => frage.antworten[r]).join(' & ');
+                fb.textContent = `❌ Falsch. Richtig wäre: ${richtigeTexte}`;
+            }
+
+            document.getElementById('quizScoreLabel').textContent = `✓ ${quizScore} richtig`;
+
+            // Weiter-Button oder Ergebnis
+            const nextBtn = document.getElementById('quizNextBtn');
+            if (quizIndex < 9) {
+                nextBtn.className = 'quiz-next-btn show';
+                nextBtn.textContent = 'Nächste Frage →';
+            } else {
+                nextBtn.className = 'quiz-next-btn show';
+                nextBtn.textContent = 'Ergebnis anzeigen 🏆';
+            }
+        }
+
+        function nextQuestion() {
+            quizIndex++;
+            if (quizIndex >= 10) {
+                zeigeErgebnis();
+            } else {
+                zeigeQuizFrage();
+            }
+        }
+
+        function zeigeErgebnis() {
+            document.getElementById('quizProgressFill').style.width = '100%';
+            document.getElementById('quizNextBtn').className = 'quiz-next-btn';
+            document.getElementById('quizQuestionCard').style.display = 'none';
+            document.getElementById('quizAnswers').style.display = 'none';
+            document.getElementById('quizFeedback').className = 'quiz-feedback';
+
+            const result = document.getElementById('quizResult');
+            result.style.display = 'block';
+
+            const pct = quizScore / 10;
+            let emoji, label;
+            if (pct === 1)        { emoji = '🏆'; label = 'Perfekt! Du kennst das HLF 20 in- und auswendig!'; }
+            else if (pct >= 0.8)  { emoji = '🥇'; label = 'Hervorragend! Fast alles richtig!'; }
+            else if (pct >= 0.6)  { emoji = '🥈'; label = 'Gut gemacht! Noch etwas üben!'; }
+            else if (pct >= 0.4)  { emoji = '🥉'; label = 'Nicht schlecht – weiter üben!'; }
+            else                  { emoji = '📚'; label = 'Schau dir die Gerätefächer nochmal an!'; }
+
+            document.getElementById('resultEmoji').textContent = emoji;
+            document.getElementById('resultScore').textContent = `${quizScore} / 10`;
+            document.getElementById('resultLabel').textContent = label;
+
+            setTimeout(() => {
+                document.getElementById('resultBar').style.width = (pct * 100) + '%';
+            }, 100);
+        }
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')

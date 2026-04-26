@@ -1,0 +1,105 @@
+/* ============================================================
+   animations.css – Feuerwehr Grafrath Gerätekunde
+   Ansichts-Wechsel, Hotspot-Erscheinen, Screen-Transitions
+   ============================================================ */
+
+/* ── Fahrzeugbild: Fade + leichter Scale beim Wechseln ────── */
+.vehicle-stage-image {
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    will-change: opacity, transform;
+}
+
+.vehicle-stage-image.view-leaving {
+    opacity: 0;
+    transform: scale(0.97) translateX(-8px);
+}
+
+.vehicle-stage-image.view-entering {
+    opacity: 0;
+    transform: scale(0.97) translateX(8px);
+    transition: none; /* kein Übergang beim Setzen der Start-Position */
+}
+
+.vehicle-stage-image.view-visible {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ── Hotspot-Gruppe: unsichtbar während Bildwechsel ─────────── */
+.hotspot-group {
+    pointer-events: none; /* Standard: nicht klickbar */
+    transition: opacity 0.2s ease;
+}
+
+.hotspot-group.hs-hidden {
+    opacity: 0;
+}
+
+.hotspot-group.hs-visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* ── Einzelner Hotspot: gestaffeltes Hereinspringen ─────────── */
+@keyframes hotspotPop {
+    0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+    65%  { transform: translate(-50%, -50%) scale(1.2); }
+    100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.compartment-hotspot.hs-pop {
+    animation: hotspotPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* ── Screen-Wechsel (Home → Fahrzeug → Quiz) ────────────────── */
+@keyframes screenSlideIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes screenSlideOut {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-12px); }
+}
+
+.screen.slide-in {
+    animation: screenSlideIn 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.screen.slide-out {
+    animation: screenSlideOut 0.22s ease both;
+}
+
+/* ── View-Button aktiv: sanfter Übergang ────────────────────── */
+.view-btn {
+    transition: background 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
+}
+
+/* ── Vehicle-Stage: Hover-Zoom nur wenn kein Wechsel läuft ─── */
+.vehicle-stage:not(.switching):hover .vehicle-stage-image.view-visible {
+    transform: scale(1.015);
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ── Hotspot-Puls-Ring (neues Design, ersetzt altes pulse) ──── */
+@keyframes hotspotRing {
+    0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 0.9; }
+    80%  { transform: translate(-50%, -50%) scale(2.0); opacity: 0; }
+    100% { transform: translate(-50%, -50%) scale(2.0); opacity: 0; }
+}
+
+.compartment-hotspot::before {
+    animation: hotspotRing 2.2s ease-out infinite;
+}
+
+/* Zweiter, verzögerter Ring für Tiefe */
+.compartment-hotspot .hs-ring2 {
+    content: '';
+    position: absolute;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 59, 48, 0.3);
+    animation: hotspotRing 2.2s 0.7s ease-out infinite;
+    pointer-events: none;
+}
